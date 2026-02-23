@@ -12,6 +12,11 @@ export const editorWinOptions = Object.freeze({
     // enable it always and set the HTML spelling attribute to false.
     spellcheck: true,
     nodeIntegration: true,
+    // NOTE: webSecurity is disabled to allow loading local images from arbitrary
+    // file system paths (file:// URLs) into the renderer. Disabling this setting
+    // bypasses the same-origin policy, which is a known trade-off for a local
+    // markdown editor. Navigation and new-window events are blocked in app/index.js
+    // to reduce the attack surface.
     webSecurity: false
   },
   useContentSize: true,
@@ -31,6 +36,7 @@ export const preferencesWinOptions = Object.freeze({
     // Always true to access native spellchecker.
     spellcheck: true,
     nodeIntegration: true,
+    // NOTE: See editorWinOptions above for explanation of this trade-off.
     webSecurity: false
   },
   fullscreenable: false,

@@ -111,6 +111,11 @@ class App {
       contents.setWindowOpenHandler(details => {
         return { action: 'deny' }
       })
+      // Deny all browser permission requests (camera, microphone, geolocation, notifications,
+      // etc.) to prevent sensitive information from leaving the local computer.
+      contents.session.setPermissionRequestHandler((webContents, permission, callback) => {
+        callback(false)
+      })
     })
   }
 
