@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { getCurrentWindow } from '@electron/remote'
+import { ipcRenderer } from 'electron'
 import { closePath } from '../../assets/window-controls.js'
 
 export default {
@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     handleCloseClick () {
-      getCurrentWindow().close()
+      ipcRenderer.send('mt::window-close')
     }
   }
 }

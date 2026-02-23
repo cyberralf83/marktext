@@ -1,30 +1,25 @@
-import { getCurrentWindow, Menu as RemoteMenu, MenuItem as RemoteMenuItem } from '@electron/remote'
-import {
-  CLOSE_THIS,
-  CLOSE_OTHERS,
-  CLOSE_SAVED,
-  CLOSE_ALL,
-  SEPARATOR,
-  RENAME,
-  COPY_PATH,
-  SHOW_IN_FOLDER
-} from './menuItems'
+import { ipcRenderer } from 'electron'
+import bus from '../../bus'
+
+// Listen for context menu action responses from main process
+ipcRenderer.on('mt::context-menu-tab-action', (event, { action, tabId }) => {
+  const actions = {
+    closeThis: () => bus.$emit('TABS::close-this', tabId),
+    closeOthers: () => bus.$emit('TABS::close-others', tabId),
+    closeSaved: () => bus.$emit('TABS::close-saved'),
+    closeAll: () => bus.$emit('TABS::close-all'),
+    rename: () => bus.$emit('TABS::rename', tabId),
+    copyPath: () => bus.$emit('TABS::copy-path', tabId),
+    showInFolder: () => bus.$emit('TABS::show-in-folder', tabId)
+  }
+  if (actions[action]) actions[action]()
+})
 
 export const showContextMenu = (event, tab) => {
-  const menu = new RemoteMenu()
-  const win = getCurrentWindow()
-  const { pathname } = tab
-  const CONTEXT_ITEMS = [CLOSE_THIS, CLOSE_OTHERS, CLOSE_SAVED, CLOSE_ALL, SEPARATOR, RENAME, COPY_PATH, SHOW_IN_FOLDER]
-  const FILE_CONTEXT_ITEMS = [RENAME, COPY_PATH, SHOW_IN_FOLDER]
-
-  FILE_CONTEXT_ITEMS.forEach(item => {
-    item.enabled = !!pathname
+  ipcRenderer.send('mt::show-context-menu-tabs', {
+    tabId: tab.id,
+    pathname: tab.pathname,
+    x: event.clientX,
+    y: event.clientY
   })
-
-  CONTEXT_ITEMS.forEach(item => {
-    const menuItem = new RemoteMenuItem(item)
-    menuItem._tabId = tab.id
-    menu.append(menuItem)
-  })
-  menu.popup([{ window: win, x: event.clientX, y: event.clientY }])
 }

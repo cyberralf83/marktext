@@ -17,6 +17,7 @@ import { watchers } from '../utils/imagePathAutoComplement'
 import { WindowType } from '../windows/base'
 import EditorWindow from '../windows/editor'
 import SettingWindow from '../windows/setting'
+import registerContextMenuHandlers from '../ipcMain/contextMenu'
 
 class App {
   /**
@@ -424,6 +425,7 @@ class App {
   _listenForIpcMain () {
     registerKeyboardListeners()
     registerSpellcheckerListeners()
+    registerContextMenuHandlers()
 
     ipcMain.on('app-create-editor-window', () => {
       this._createEditorWindow()
