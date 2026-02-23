@@ -665,7 +665,11 @@ export default {
   },
   methods: {
     photoCreatorClick: (url) => {
-      shell.openExternal(url)
+      // Only open HTTPS URLs from the expected Unsplash domain to prevent
+      // opening potentially malicious URLs from a compromised API response.
+      if (url && /^https:\/\/(www\.)?unsplash\.com\//.test(url)) {
+        shell.openExternal(url)
+      }
     },
 
     jumpClick (linkInfo) {
