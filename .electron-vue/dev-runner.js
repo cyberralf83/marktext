@@ -77,11 +77,12 @@ function startRenderer () {
           watch: false
         }
       ],
-      onBeforeSetupMiddleware ({ app, middleware }) {
-        app.use(hotMiddleware)
-        middleware.waitUntilValid(() => {
+      setupMiddlewares (middlewares, devServer) {
+        devServer.app.use(hotMiddleware)
+        devServer.middleware.waitUntilValid(() => {
           resolve()
         })
+        return middlewares
       }
     }, compiler)
 

@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { shell, clipboard } from 'electron'
+import { shell, ipcRenderer } from 'electron'
 import { mapState } from 'vuex'
 import autoScroll from 'dom-autoscroller'
 import dragula from 'dragula'
@@ -104,7 +104,7 @@ export default {
     copyPath (tabId) {
       const tab = this.tabs.find(f => f.id === tabId)
       if (tab && tab.pathname) {
-        clipboard.writeText(tab.pathname)
+        ipcRenderer.invoke('mt::clipboard-write-text', tab.pathname)
       }
     },
     showInFolder (tabId) {

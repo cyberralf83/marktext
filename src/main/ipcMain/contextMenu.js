@@ -114,6 +114,11 @@ const registerContextMenuHandlers = () => {
     }
   })
 
+  // Clipboard write (renderer clipboard is deprecated in Electron 35)
+  ipcMain.handle('mt::clipboard-write-text', (event, text) => {
+    clipboard.writeText(text)
+  })
+
   // Clipboard file reading (replaces @electron/remote clipboard usage)
   ipcMain.handle('mt::clipboard-read-files', () => {
     if (isOsx) {

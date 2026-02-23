@@ -6,7 +6,7 @@ export const editorWinOptions = Object.freeze({
   minWidth: 550,
   minHeight: 350,
   webPreferences: {
-    contextIsolation: true,
+    contextIsolation: false,
     // WORKAROUND: We cannot enable spellcheck if it was disabled during
     // renderer startup due to a bug in Electron (Electron#32755). We'll
     // enable it always and set the HTML spelling attribute to false.
@@ -27,7 +27,7 @@ export const preferencesWinOptions = Object.freeze({
   width: 950,
   height: 650,
   webPreferences: {
-    contextIsolation: true,
+    contextIsolation: false,
     // Always true to access native spellchecker.
     spellcheck: true,
     nodeIntegration: true,

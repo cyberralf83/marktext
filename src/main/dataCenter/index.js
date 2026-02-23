@@ -1,8 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import EventEmitter from 'events'
-import { BrowserWindow, ipcMain, dialog } from 'electron'
-import keytar from 'keytar'
+import { BrowserWindow, ipcMain, dialog, safeStorage } from 'electron'
 import schema from './schema'
 import Store from 'electron-store'
 import log from 'electron-log'
@@ -49,23 +48,42 @@ class DataCenter extends EventEmitter {
       this.store.set(defaultData)
       ensureDirSync(this.store.get('screenshotFolderPath'))
     }
+
+    this._migrateFromKeytar()
     this._listenForIpcMain()
   }
 
-  async getAll () {
-    const { serviceName, encryptKeys } = this
+  async _migrateFromKeytar () {
+    const { encryptKeys, serviceName } = this
+    const encrypted = this.store.get('_encrypted') || {}
+
+    // Skip if already migrated (any key present in _encrypted)
+    if (Object.keys(encrypted).length > 0) return
+
+    try {
+      // Use __non_webpack_require__ to avoid webpack bundling keytar (which is no longer a dependency).
+      // eslint-disable-next-line camelcase, no-undef
+      const keytar = __non_webpack_require__('keytar')
+      for (const key of encryptKeys) {
+        const value = await keytar.getPassword(serviceName, key)
+        if (value) {
+          this._encryptAndStore(key, value)
+        }
+      }
+      log.info('Migrated encrypted keys from keytar to safeStorage.')
+    } catch (_) {
+      // keytar not installed or not available — skip migration silently
+    }
+  }
+
+  getAll () {
+    const { encryptKeys } = this
     const data = this.store.store
     try {
-      const encryptData = await Promise.all(encryptKeys.map(key => {
-        return keytar.getPassword(serviceName, key)
-      }))
-      const encryptObj = encryptKeys.reduce((acc, k, i) => {
-        return {
-          ...acc,
-          [k]: encryptData[i]
-        }
-      }, {})
-
+      const encryptObj = {}
+      for (const key of encryptKeys) {
+        encryptObj[key] = this._decryptFromStore(key)
+      }
       return Object.assign(data, encryptObj)
     } catch (err) {
       log.error('Failed to decrypt secure keys:', err)
@@ -108,26 +126,26 @@ class DataCenter extends EventEmitter {
    * return a promise
    */
   getItem (key) {
-    const { encryptKeys, serviceName } = this
+    const { encryptKeys } = this
     if (encryptKeys.includes(key)) {
-      return keytar.getPassword(serviceName, key)
+      return Promise.resolve(this._decryptFromStore(key))
     } else {
       const value = this.store.get(key)
       return Promise.resolve(value)
     }
   }
 
-  async setItem (key, value) {
-    const { encryptKeys, serviceName } = this
+  setItem (key, value) {
+    const { encryptKeys } = this
     if (key === 'screenshotFolderPath') {
       ensureDirSync(value)
     }
     ipcMain.emit('broadcast-user-data-changed', { [key]: value })
     if (encryptKeys.includes(key)) {
       try {
-        return await keytar.setPassword(serviceName, key, value)
+        this._encryptAndStore(key, value)
       } catch (err) {
-        log.error('Keytar error:', err)
+        log.error('safeStorage error:', err)
       }
     } else {
       return this.store.set(key, value)
@@ -148,6 +166,32 @@ class DataCenter extends EventEmitter {
     Object.keys(settings).forEach(key => {
       this.setItem(key, settings[key])
     })
+  }
+
+  _encryptAndStore (key, value) {
+    if (!safeStorage.isEncryptionAvailable()) {
+      log.warn('safeStorage encryption is not available; storing key in plain text.')
+      this.store.set('_encrypted.' + key, value)
+      return
+    }
+    const encrypted = safeStorage.encryptString(value)
+    this.store.set('_encrypted.' + key, encrypted.toString('base64'))
+  }
+
+  _decryptFromStore (key) {
+    const encoded = this.store.get('_encrypted.' + key)
+    if (!encoded) return null
+    if (!safeStorage.isEncryptionAvailable()) {
+      log.warn('safeStorage encryption is not available; returning raw value.')
+      return encoded
+    }
+    try {
+      const buffer = Buffer.from(encoded, 'base64')
+      return safeStorage.decryptString(buffer)
+    } catch (err) {
+      log.error(`Failed to decrypt key "${key}":`, err)
+      return null
+    }
   }
 
   _listenForIpcMain () {

@@ -1,4 +1,4 @@
-import { clipboard, ipcRenderer, shell, webFrame } from 'electron'
+import { ipcRenderer, shell, webFrame } from 'electron'
 import path from 'path'
 import equal from 'fast-deep-equal'
 import { isSamePathSync } from 'common/filesystem/paths'
@@ -376,7 +376,7 @@ const actions = {
       time: 20000
     })
       .then(() => {
-        clipboard.writeText(deletionUrl)
+        ipcRenderer.invoke('mt::clipboard-write-text', deletionUrl)
       })
   },
 

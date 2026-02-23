@@ -34,7 +34,6 @@
     "deobfuscateStackTrace": "node tools/deobfuscateStackTrace.js"
   },
   "dependencies": {
-    "@electron/remote": "^2.0.8",
     "@hfelix/electron-localshortcut": "^4.0.1",
     "@marktext/file-icons": "^1.0.6",
     "@octokit/rest": "^18.12.0",
@@ -65,7 +64,6 @@
     "iso-639-1": "^2.1.13",
     "joplin-turndown-plugin-gfm": "^1.0.12",
     "katex": "^0.15.3",
-    "keytar": "^7.9.0",
     "mermaid": "^10.0.0",
     "minizlib": "^2.1.2",
     "native-keymap": "^3.3.0",
@@ -83,7 +81,6 @@
     "vega-lite": "^5.2.0",
     "vscode-ripgrep": "^1.12.1",
     "vue": "^2.6.14",
-    "vue-electron": "^1.0.6",
     "vue-router": "^3.5.3",
     "vuex": "^3.6.2",
     "webfontloader": "^1.6.28"
@@ -101,7 +98,7 @@
     "@babel/register": "^7.17.7",
     "@babel/runtime": "^7.17.9",
     "@markedjs/html-differ": "^3.0.4",
-    "@playwright/test": "^1.21.0",
+    "@playwright/test": "^1.50.0",
     "babel-loader": "^8.2.4",
     "babel-plugin-component": "^1.1.1",
     "babel-plugin-istanbul": "^6.1.1",
@@ -113,13 +110,12 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
     "del": "^6.0.0",
-    "devtron": "^1.4.0",
     "dotenv": "^16.0.0",
-    "electron": "^18.0.4",
-    "electron-builder": "^23.0.6",
-    "electron-devtools-installer": "^3.2.0",
-    "electron-rebuild": "^3.2.7",
-    "electron-updater": "^5.0.2",
+    "electron": "^35.0.0",
+    "electron-builder": "^25.1.0",
+    "@electron/rebuild": "^3.7.0",
+    "electron-devtools-installer": "^4.0.0",
+    "electron-updater": "^6.3.0",
     "eslint": "^8.13.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-friendly-formatter": "^4.0.1",
@@ -152,7 +148,7 @@
     "node-fetch": "^2.6.7",
     "node-loader": "^2.0.0",
     "path-browserify": "^1.0.1",
-    "playwright": "^1.21.0",
+    "playwright": "^1.50.0",
     "postcss": "^8.4.12",
     "postcss-loader": "^6.2.1",
     "postcss-preset-env": "^7.4.3",
@@ -177,8 +173,7 @@
     "webpack-merge": "^5.8.0"
   },
   "resolutions": {
-    "node-abi": "^3.8.0",
-    "node-addon-api": "^4.3.0"
+    "node-addon-api": "^7.0.0"
   },
   "repository": {
     "type": "git",

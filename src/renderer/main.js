@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import VueElectron from 'vue-electron'
 import sourceMapSupport from 'source-map-support'
 import bootstrapRenderer from './bootstrap'
 import VueRouter from 'vue-router'
@@ -88,7 +87,6 @@ Vue.use(Input)
 
 Vue.use(VueRouter)
 
-Vue.use(VueElectron)
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
