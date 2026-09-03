@@ -56,6 +56,10 @@ export const toggleTabBar = win => {
   toggleLayout(win, 'showTabBar')
 }
 
+export const toggleFormatBar = win => {
+  toggleLayout(win, 'showFormatBar')
+}
+
 export const showTabBar = win => {
   setLayout(win, 'showTabBar', true)
 }
@@ -83,6 +87,7 @@ export const loadViewCommands = commandManager => {
   commandManager.add(COMMANDS.VIEW_SOURCE_CODE_MODE, toggleSourceCodeMode)
   commandManager.add(COMMANDS.VIEW_TOGGLE_SIDEBAR, toggleSidebar)
   commandManager.add(COMMANDS.VIEW_TOGGLE_TABBAR, toggleTabBar)
+  commandManager.add(COMMANDS.VIEW_TOGGLE_FORMAT_BAR, toggleFormatBar)
   commandManager.add(COMMANDS.VIEW_TOGGLE_TOC, showTableOfContents)
   commandManager.add(COMMANDS.VIEW_TYPEWRITER_MODE, toggleTypewriterMode)
 
@@ -118,6 +123,9 @@ export const viewLayoutChanged = (applicationMenu, changes) => {
         break
       case 'showTabBar':
         changeMenuByName('tabBarMenuItem', value)
+        break
+      case 'showFormatBar':
+        changeMenuByName('formatBarMenuItem', value)
         break
       case 'sourceCode':
         changeMenuByName('sourceCodeModeMenuItem', value)

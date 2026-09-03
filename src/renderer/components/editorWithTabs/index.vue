@@ -4,6 +4,7 @@
       :style="{'max-width': showSideBar ? `calc(100vw - ${sideBarWidth}px` : '100vw' }"
     >
       <tabs v-show="showTabBar"></tabs>
+      <format-bar v-show="showFormatBar"></format-bar>
       <div class="container">
         <editor
           :markdown="markdown"
@@ -25,6 +26,7 @@
 <script>
 import { mapState } from 'vuex'
 import Tabs from './tabs.vue'
+import FormatBar from './formatBar.vue'
 import Editor from './editor.vue'
 import SourceCode from './sourceCode.vue'
 import TabNotifications from './notifications.vue'
@@ -60,6 +62,7 @@ export default {
   },
   components: {
     Tabs,
+    FormatBar,
     Editor,
     SourceCode,
     TabNotifications
@@ -67,6 +70,7 @@ export default {
   computed: {
     ...mapState({
       showSideBar: state => state.layout.showSideBar,
+      showFormatBar: state => state.layout.showFormatBar,
       sideBarWidth: state => state.layout.sideBarWidth
     })
   }

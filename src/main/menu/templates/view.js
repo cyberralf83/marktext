@@ -59,6 +59,15 @@ export default function (keybindings) {
         actions.toggleTabBar(focusedWindow)
       }
     }, {
+      label: 'Show Format Bar',
+      id: 'formatBarMenuItem',
+      accelerator: keybindings.getAccelerator('view.toggle-format-bar'),
+      type: 'checkbox',
+      checked: false,
+      click (item, focusedWindow) {
+        actions.toggleFormatBar(focusedWindow)
+      }
+    }, {
       label: 'Toggle Table of Contents',
       id: 'tocMenuItem',
       accelerator: keybindings.getAccelerator('view.toggle-toc'),

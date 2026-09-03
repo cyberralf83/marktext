@@ -9,6 +9,7 @@ const state = {
   rightColumn: 'files',
   showSideBar: false,
   showTabBar: false,
+  showFormatBar: false,
   sideBarWidth
 }
 
@@ -61,8 +62,8 @@ const actions = {
 
   DISPATCH_LAYOUT_MENU_ITEMS ({ state }) {
     const { windowId } = global.marktext.env
-    const { showTabBar, showSideBar } = state
-    ipcRenderer.send('mt::view-layout-changed', windowId, { showTabBar, showSideBar })
+    const { showTabBar, showSideBar, showFormatBar } = state
+    ipcRenderer.send('mt::view-layout-changed', windowId, { showTabBar, showSideBar, showFormatBar })
   },
 
   CHANGE_SIDE_BAR_WIDTH ({ commit }, width) {

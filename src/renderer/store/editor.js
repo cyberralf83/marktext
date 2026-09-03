@@ -20,13 +20,17 @@ const state = {
   currentFile: {},
   tabs: [],
   listToc: [], // Just use for deep equal check. and replace with new toc if needed.
-  toc: []
+  toc: [],
+  selectionFormats: []
 }
 
 const mutations = {
   // set search key and matches also index
   SET_SEARCH (state, value) {
     state.currentFile.searchMatches = value
+  },
+  SET_SELECTION_FORMATS (state, formats) {
+    state.selectionFormats = formats
   },
   SET_TOC (state, toc) {
     state.listToc = toc
@@ -1029,7 +1033,8 @@ const actions = {
     ipcRenderer.send('mt::editor-selection-changed', windowId, createApplicationMenuState(changes))
   },
 
-  SELECTION_FORMATS (_, formats) {
+  SELECTION_FORMATS ({ commit }, formats) {
+    commit('SET_SELECTION_FORMATS', formats)
     const { windowId } = global.marktext.env
     ipcRenderer.send('mt::update-format-menu', windowId, createSelectionFormatState(formats))
   },

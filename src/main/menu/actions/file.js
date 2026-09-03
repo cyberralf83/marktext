@@ -479,8 +479,9 @@ ipcMain.on('mt::cmd-import-file', e => {
 // --- menu -------------------------------------
 
 export const exportFile = (win, type) => {
-  if (win && win.webContents) {
-    win.webContents.send('mt::show-export-dialog', type)
+  const target = win || BrowserWindow.getFocusedWindow()
+  if (target && target.webContents) {
+    target.webContents.send('mt::show-export-dialog', type)
   }
 }
 
